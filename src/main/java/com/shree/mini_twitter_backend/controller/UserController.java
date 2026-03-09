@@ -1,0 +1,58 @@
+package com.shree.mini_twitter_backend.controller;
+
+import com.shree.mini_twitter_backend.dto.LoginRequest;
+import com.shree.mini_twitter_backend.dto.RegisterUserRequest;
+import com.shree.mini_twitter_backend.entity.Follow;
+import com.shree.mini_twitter_backend.entity.User;
+import com.shree.mini_twitter_backend.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
+
+@RestController
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/auth/register")
+    public User registerUser(@RequestBody RegisterUserRequest request){
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setMobileNumber(request.getMobileNumber());
+        user.setPassword(request.getPassword());
+        user.setBio(request.getBio());
+
+        return userService.registerUser(user);
+    }
+
+    @PostMapping("/auth/login")
+    public User loginUser(@RequestBody LoginRequest request){
+
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+
+        return userService.loginUser(user);
+    }
+
+    @GetMapping("/users/{id}")
+    public Optional<User> getUserById(@PathVariable Long Id){
+        return userService.getUserById(Id);
+    }
+
+    @PostMapping("/users/{followerId}/follow/{followingId}")
+    public Follow followUser(@PathVariable Long followerId, @PathVariable Long followingId){
+        return userService.followUser(followerId, followingId);
+    }
+
+    @PostMapping("/users/{followerId}/unfollow/{followingId}")
+    public Follow unFollowUser(@PathVariable Long followerId,@PathVariable Long followingId){
+        return userService.unFollowUser(followerId, followingId);
+    }
+
+}
