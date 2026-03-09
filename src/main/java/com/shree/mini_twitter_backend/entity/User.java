@@ -1,5 +1,7 @@
 package com.shree.mini_twitter_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.shree.mini_twitter_backend.enums.AccountStatus;
 import com.shree.mini_twitter_backend.enums.role;
 import jakarta.persistence.*;
@@ -26,6 +28,7 @@ public class User {
     private String mobileNumber;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String bio;
@@ -41,17 +44,22 @@ public class User {
     private AccountStatus accountStatus;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Post> posts;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Like> likes;
 
     @OneToMany(mappedBy = "follower")
+    @JsonIgnore
     private List<Follow> following;
 
     @OneToMany(mappedBy = "following")
+    @JsonIgnore
     private List<Follow> followers;
 }
