@@ -1,12 +1,15 @@
 package com.shree.mini_twitter_backend.service;
 
+import com.shree.mini_twitter_backend.config.CloudinaryConfig;
 import com.shree.mini_twitter_backend.entity.Post;
 import com.shree.mini_twitter_backend.entity.User;
 import com.shree.mini_twitter_backend.repository.PostRepository;
 import com.shree.mini_twitter_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -16,10 +19,21 @@ public class PostService {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
-    public Post createPost(Long userId, Post post){
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("user not found"));
+    public Post createPost(Long userId, String content, MultipartFile image) throws IOException {
+
+        User user = userRepository.findById(userId).
+                orElseThrow(() -> new RuntimeException("user not found"));
+
+        String imageUrl = cloudinaryService.uploadImage(image);
+
+        Post post = new Post();
+        post.setContent(content);
+        post.setImageUrl(imageUrl);
         post.setUser(user);
+
         return postRepository.save(post);
     }
 
