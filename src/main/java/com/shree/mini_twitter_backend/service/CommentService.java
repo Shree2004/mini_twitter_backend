@@ -42,7 +42,7 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(()-> new RuntimeException("Post not Found"));
 
-        return commentRepository.findByPostId(postId);
+        return commentRepository.findByPostPostId(postId);
     }
 
     public void deleteComment(Long userId, Long postId, Long commentId){
