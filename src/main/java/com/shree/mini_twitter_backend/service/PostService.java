@@ -27,7 +27,11 @@ public class PostService {
         User user = userRepository.findById(userId).
                 orElseThrow(() -> new RuntimeException("user not found"));
 
-        String imageUrl = cloudinaryService.uploadImage(image);
+        String imageUrl = null;
+
+        if (image != null && !image.isEmpty()) {
+            imageUrl = cloudinaryService.uploadImage(image);
+        }
 
         Post post = new Post();
         post.setContent(content);

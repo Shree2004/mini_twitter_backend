@@ -1,5 +1,6 @@
 package com.shree.mini_twitter_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,6 +22,7 @@ public class Like {
     private User user;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "postId", nullable = false)
     private Post post;
 

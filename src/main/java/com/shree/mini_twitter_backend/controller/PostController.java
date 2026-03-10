@@ -16,7 +16,9 @@ public class PostController {
     private PostService postService;
 
     @PostMapping("/users/{userId}/posts")
-    public Post createPost(@PathVariable Long userId, @RequestParam String content, @RequestParam MultipartFile image) throws IOException {
+    public Post createPost(@PathVariable Long userId,
+                           @RequestParam String content,
+                           @RequestParam (required = false) MultipartFile image) throws IOException {
         return postService.createPost(userId,content,image);
     }
 

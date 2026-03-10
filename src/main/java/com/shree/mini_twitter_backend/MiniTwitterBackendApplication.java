@@ -9,5 +9,4 @@ public class MiniTwitterBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MiniTwitterBackendApplication.class, args);
 	}
-
 }

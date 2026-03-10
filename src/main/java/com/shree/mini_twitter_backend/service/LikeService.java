@@ -59,7 +59,7 @@ public class LikeService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not Found"));
 
-        return likeRepository.countByPost(post.getPostId());
+        return likeRepository.countByPost(post);
     }
 
 
