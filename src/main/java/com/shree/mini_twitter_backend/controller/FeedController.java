@@ -1,5 +1,6 @@
 package com.shree.mini_twitter_backend.controller;
 
+import com.shree.mini_twitter_backend.dto.FeedPost;
 import com.shree.mini_twitter_backend.entity.Post;
 import com.shree.mini_twitter_backend.service.FeedService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class FeedController {
     private FeedService feedService;
 
     @GetMapping("/{userId}/feeds")
-    public List<Post> feedGeneration(@PathVariable Long userId){
+    public List<FeedPost> feedGeneration(@PathVariable Long userId){
         return feedService.feedGeneration(userId);
     }
 
