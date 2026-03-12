@@ -1,5 +1,8 @@
 package com.shree.mini_twitter_backend.dto;
 
+import lombok.Data;
+
+@Data
 public class UserDTO {
 
     private Long userId;

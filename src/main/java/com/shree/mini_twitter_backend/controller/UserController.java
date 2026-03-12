@@ -20,29 +20,19 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/auth/register")
-    public User registerUser(@RequestBody RegisterUserRequest request){
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setMobileNumber(request.getMobileNumber());
-        user.setPassword(request.getPassword());
-        user.setBio(request.getBio());
-        user.setAccountStatus(AccountStatus.ACTIVE);
-        user.setRole(role.USER);
-
-        return userService.registerUser(user);
-    }
-
-    @PostMapping("/auth/login")
-    public User loginUser(@RequestBody LoginRequest request){
-
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-
-        return userService.loginUser(user);
-    }
+//    @PostMapping("/auth/register")
+//    public User registerUser(@RequestBody RegisterUserRequest request){
+//        User user = new User();
+//        user.setUsername(request.getUsername());
+//        user.setEmail(request.getEmail());
+//        user.setMobileNumber(request.getMobileNumber());
+//        user.setPassword(request.getPassword());
+//        user.setBio(request.getBio());
+//        user.setAccountStatus(AccountStatus.ACTIVE);
+//        user.setRole(role.USER);
+//
+//        return userService.registerUser(user);
+//    }
 
     @GetMapping("/users/{Id}")
     public User getUserById(@PathVariable Long Id){
