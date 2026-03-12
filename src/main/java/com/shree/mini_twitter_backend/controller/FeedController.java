@@ -1,8 +1,7 @@
-package com.shree.mini_twitter_backend.controller;
+package java.controller;
 
-import com.shree.mini_twitter_backend.dto.FeedPost;
-import com.shree.mini_twitter_backend.entity.Post;
-import com.shree.mini_twitter_backend.service.FeedService;
+import java.dto.FeedPost;
+import java.service.FeedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.web.oauth2.login.OAuth2LoginSecurityMarker;
 import org.springframework.web.bind.annotation.GetMapping;

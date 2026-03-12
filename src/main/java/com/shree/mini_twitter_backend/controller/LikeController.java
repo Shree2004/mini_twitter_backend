@@ -1,7 +1,7 @@
-package com.shree.mini_twitter_backend.controller;
+package java.controller;
 
-import com.shree.mini_twitter_backend.entity.Like;
-import com.shree.mini_twitter_backend.service.LikeService;
+import java.entity.Like;
+import java.service.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

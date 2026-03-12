@@ -1,4 +1,4 @@
-package com.shree.mini_twitter_backend.entity;
+package java.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

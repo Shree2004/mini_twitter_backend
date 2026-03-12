@@ -1,7 +1,7 @@
-package com.shree.mini_twitter_backend.controller;
+package java.controller;
 
-import com.shree.mini_twitter_backend.entity.Comment;
-import com.shree.mini_twitter_backend.service.CommentService;
+import java.entity.Comment;
+import java.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

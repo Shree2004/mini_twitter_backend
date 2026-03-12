@@ -1,7 +1,7 @@
-package com.shree.mini_twitter_backend.controller;
+package java.controller;
 
-import com.shree.mini_twitter_backend.entity.Post;
-import com.shree.mini_twitter_backend.service.PostService;
+import java.entity.Post;
+import java.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

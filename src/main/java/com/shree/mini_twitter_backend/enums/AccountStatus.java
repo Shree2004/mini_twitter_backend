@@ -1,4 +1,4 @@
-package com.shree.mini_twitter_backend.enums;
+package java.enums;
 
 public enum AccountStatus {
     ACTIVE,

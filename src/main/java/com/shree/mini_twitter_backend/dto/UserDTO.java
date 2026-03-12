@@ -1,4 +1,4 @@
-package com.shree.mini_twitter_backend.dto;
+package java.dto;
 
 public class UserDTO {
 

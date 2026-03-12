@@ -1,14 +1,13 @@
-package com.shree.mini_twitter_backend.service;
+package java.service;
 
-import com.shree.mini_twitter_backend.dto.FeedPost;
-import com.shree.mini_twitter_backend.dto.LoginRequest;
-import com.shree.mini_twitter_backend.dto.UserDTO;
-import com.shree.mini_twitter_backend.entity.Follow;
-import com.shree.mini_twitter_backend.entity.Post;
-import com.shree.mini_twitter_backend.entity.User;
-import com.shree.mini_twitter_backend.repository.FollowRepository;
-import com.shree.mini_twitter_backend.repository.PostRepository;
-import com.shree.mini_twitter_backend.repository.UserRepository;
+import java.dto.FeedPost;
+import java.dto.UserDTO;
+import java.entity.Follow;
+import java.entity.Post;
+import java.entity.User;
+import java.repository.FollowRepository;
+import java.repository.PostRepository;
+import java.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
-package com.shree.mini_twitter_backend.repository;
+package java.repository;
 
-import com.shree.mini_twitter_backend.entity.Like;
-import com.shree.mini_twitter_backend.entity.Post;
-import com.shree.mini_twitter_backend.entity.User;
+import java.entity.Like;
+import java.entity.Post;
+import java.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

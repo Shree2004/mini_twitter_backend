@@ -1,4 +1,4 @@
-package com.shree.mini_twitter_backend.entity;
+package java.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

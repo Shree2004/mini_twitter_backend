@@ -1,8 +1,7 @@
-package com.shree.mini_twitter_backend.service;
+package java.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.shree.mini_twitter_backend.config.CloudinaryConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

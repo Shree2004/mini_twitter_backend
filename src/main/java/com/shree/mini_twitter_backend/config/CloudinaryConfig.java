@@ -1,4 +1,4 @@
-package com.shree.mini_twitter_backend.config;
+package java.config;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

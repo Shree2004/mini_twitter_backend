@@ -1,15 +1,13 @@
-package com.shree.mini_twitter_backend.service;
+package java.service;
 
-import com.shree.mini_twitter_backend.entity.Like;
-import com.shree.mini_twitter_backend.entity.Post;
-import com.shree.mini_twitter_backend.entity.User;
-import com.shree.mini_twitter_backend.repository.LikeRepository;
-import com.shree.mini_twitter_backend.repository.PostRepository;
-import com.shree.mini_twitter_backend.repository.UserRepository;
+import java.entity.Like;
+import java.entity.Post;
+import java.entity.User;
+import java.repository.LikeRepository;
+import java.repository.PostRepository;
+import java.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class LikeService {

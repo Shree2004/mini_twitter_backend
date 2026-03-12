@@ -1,4 +1,4 @@
-package com.shree.mini_twitter_backend.service;
+package java.service;
 
 import com.shree.mini_twitter_backend.entity.*;
 import com.shree.mini_twitter_backend.repository.*;
