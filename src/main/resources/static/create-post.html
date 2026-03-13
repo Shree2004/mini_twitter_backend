@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Create Post</title>
     <link rel="stylesheet" href="style.css">
@@ -7,19 +8,42 @@
 
 <body>
 
-<div class="container">
+<div class="navbar">
 
-    <h2>Create Post</h2>
+    <div class="logo">
+        MiniTwitter
+    </div>
 
-    <textarea id="content" placeholder="Write something"></textarea>
+    <div class="nav-links">
+        <a href="feed.html">Feed</a>
+        <a href="profile.html">Profile</a>
+    </div>
 
-    <input type="file" id="image">
+</div>
 
-    <button onclick="createPost()">Post</button>
+
+<div class="main-container">
+
+    <div class="post-card">
+
+        <h2 style="margin-bottom:15px">
+            Create Post
+        </h2>
+
+        <textarea id="content" placeholder="What's happening?"></textarea>
+
+        <input type="file" id="image">
+
+        <button onclick="createPost()">
+            Post
+        </button>
+
+    </div>
 
 </div>
 
 <script src="app.js"></script>
 
 </body>
+
 </html>

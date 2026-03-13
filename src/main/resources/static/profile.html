@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User Profile</title>
+    <title>Profile</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h2>User Profile</h2>
+<div class="navbar">
+    <div class="logo">MiniTwitter</div>
 
-<div id="profileInfo"></div>
+    <div class="nav-links">
+        <a href="feed.html">Feed</a>
+        <a href="create-post.html">Create Post</a>
+    </div>
+</div>
 
-<h3>User Posts</h3>
+<div class="main-container">
 
-<div id="profilePosts"></div>
+    <div id="profileInfo" class="profile-card"></div>
+
+    <h3 style="margin-bottom:15px">Posts</h3>
+
+    <div id="profilePosts" class="feed"></div>
+
+</div>
 
 <script src="app.js"></script>
 

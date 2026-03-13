@@ -6,19 +6,35 @@
 </head>
 
 <body>
-<h3>Find Users</h3>
 
-<input id="searchUser" placeholder="Search username">
-<button onclick="searchUsers()">Search</button>
+<div class="navbar">
+    <div class="logo">MiniTwitter</div>
 
-<div id="userResults"></div>
+    <div class="nav-links">
+        <a href="profile.html">Profile</a>
+        <a href="create-post.html">Create Post</a>
+    </div>
+</div>
 
-<hr>
-<h2 style="margin:20px">Feed</h2>
+<div class="main-container">
 
-<a href="create-post.html">Create Post</a>
+    <div class="search-container">
 
-<div id="feed"></div>
+        <input id="searchUser" placeholder="Search users...">
+
+        <button onclick="searchUsers()">
+            Search
+        </button>
+
+    </div>
+
+    <div id="userResults"></div>
+
+    <h2 style="margin-bottom:20px">Feed</h2>
+
+    <div id="feed" class="feed"></div>
+
+</div>
 
 <script src="app.js"></script>
 
