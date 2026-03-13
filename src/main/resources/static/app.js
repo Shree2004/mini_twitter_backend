@@ -206,40 +206,38 @@ div.style.display = "none";
 
 async function searchUsers(){
 
-const query = document.getElementById("searchUser").value;
+    const username = document.getElementById("searchUser").value
 
-const res = await fetch(API + "/users/search?username=" + query,{
-headers:{
-Authorization: "Bearer " + getToken()
-}
-});
+    const res = await fetch(API + "/users/search?username=" + username,{
+        headers:{
+            "Authorization":"Bearer " + getToken()
+        }
+    })
 
-const users = await res.json();
+    const users = await res.json()
 
-console.log("API RESPONSE:", users);   // 👈 ADD THIS
+    const results = document.getElementById("userResults")
 
-const results = document.getElementById("userResults");
+    results.innerHTML=""
 
-results.innerHTML = "";
+    users.forEach(user => {
 
-users.forEach(u => {
+        results.innerHTML += `
+        <div>
 
-console.log("User object:", u);   // 👈 ADD THIS
+            <b>${user.username}</b>
 
-const name = u.username;
+            <button onclick="follow('${user.username}')">
+                Follow
+            </button>
 
-results.innerHTML += `
-<div>
+            <a href="profile.html?username=${user.username}">
+                View Profile
+            </a>
 
-<b>${name}</b>
-
-<button onclick="followUser('${name}')">Follow</button>
-<button onclick="unfollowUser('${name}')">Unfollow</button>
-
-</div>
-`;
-
-});
+        </div>
+        `
+    })
 
 }
 
@@ -275,6 +273,54 @@ Authorization:"Bearer " + getToken()
 });
 
 alert("Unfollowed user");
+
+}
+
+// Profile Page
+
+async function loadProfile(){
+
+    const urlParams = new URLSearchParams(window.location.search)
+    const username = urlParams.get("username")
+
+    const res = await fetch(API + "/users/" + username + "/profile",{
+        headers:{
+            "Authorization":"Bearer " + getToken()
+        }
+    })
+
+    const data = await res.json()
+
+    const profileInfo = document.getElementById("profileInfo")
+
+    profileInfo.innerHTML = `
+        <h3>${data.username}</h3>
+        <p>${data.bio}</p>
+
+        <p>Posts: ${data.postCount}</p>
+        <p>Followers: ${data.followerCount}</p>
+        <p>Following: ${data.followingCount}</p>
+    `
+
+    const postsDiv = document.getElementById("profilePosts")
+
+    postsDiv.innerHTML=""
+
+    data.posts.forEach(post => {
+
+        postsDiv.innerHTML += `
+            <div class="post">
+                <p>${post.content}</p>
+
+                ${post.imageUrl ? `<img src="${post.imageUrl}" width="200">` : ""}
+
+                <p>Likes: ${post.likeCount}</p>
+                <p>Comments: ${post.commentCount}</p>
+
+                <hr>
+            </div>
+        `
+    })
 
 }
 

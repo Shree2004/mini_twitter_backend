@@ -1,32 +1,40 @@
 package com.shree.mini_twitter_backend.service;
 
+import com.shree.mini_twitter_backend.dto.FeedPost;
+import com.shree.mini_twitter_backend.dto.ProfileDTO;
 import com.shree.mini_twitter_backend.dto.UserDTO;
-import com.shree.mini_twitter_backend.entity.*;
-import com.shree.mini_twitter_backend.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.shree.mini_twitter_backend.entity.Follow;
+import com.shree.mini_twitter_backend.entity.Post;
+import com.shree.mini_twitter_backend.entity.User;
+import com.shree.mini_twitter_backend.repository.FollowRepository;
+import com.shree.mini_twitter_backend.repository.PostRepository;
+import com.shree.mini_twitter_backend.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private FollowRepository followRepository;
+    private final UserRepository userRepository;
+    private final FollowRepository followRepository;
+    private final PostRepository postRepository;
 
     public User registerUser(User user){
+
         if (userRepository.existsByUsername(user.getUsername())){
             throw new RuntimeException("Username already exists");
         }
+
         if (userRepository.existsByEmail(user.getEmail())){
             throw new RuntimeException("Email already exists");
         }
+
         if (userRepository.existsByMobileNumber(user.getMobileNumber())){
-            throw new RuntimeException("Mobile number Already exists");
+            throw new RuntimeException("Mobile number already exists");
         }
 
         return userRepository.save(user);
@@ -42,9 +50,10 @@ public class UserService {
 
         User dbUser = existingUser.get();
 
-        if (!dbUser.getPassword().equals(user.getPassword())) {
+        if (!dbUser.getPassword().equals(user.getPassword())){
             throw new RuntimeException("Password incorrect");
         }
+
         return dbUser;
     }
 
@@ -96,7 +105,7 @@ public class UserService {
         return unfollow;
     }
 
-    public List<UserDTO> searchUsers(String username) {
+    public List<UserDTO> searchUsers(String username){
 
         List<User> users = userRepository.findByUsernameContaining(username);
 
@@ -108,6 +117,42 @@ public class UserService {
                 .toList();
     }
 
+    public ProfileDTO getProfile(String username){
 
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        long postCount = postRepository.countByUser(user);
+        long followerCount = followRepository.countByFollowing(user);
+        long followingCount = followRepository.countByFollower(user);
+
+        List<Post> userPosts = postRepository.findByUser(user);
+
+        List<FeedPost> postDTOs = userPosts.stream()
+                .map(post -> {
+                    FeedPost dto = new FeedPost();
+
+                    dto.setPostId(post.getPostId());
+                    dto.setContent(post.getContent());
+                    dto.setImageUrl(post.getImageUrl());
+                    dto.setCreatedAt(post.getCreatedAt());
+                    dto.setLikeCount(post.getLikes().size());
+                    dto.setCommentCount(post.getComments().size());
+
+                    return dto;
+                })
+                .toList();
+
+        ProfileDTO profileDTO = new ProfileDTO();
+
+        profileDTO.setUsername(user.getUsername());
+        profileDTO.setBio(user.getBio());
+        profileDTO.setPostCount(postCount);
+        profileDTO.setFollowerCount(followerCount);
+        profileDTO.setFollowingCount(followingCount);
+        profileDTO.setPosts(postDTOs);
+
+        return profileDTO;
+    }
 
 }

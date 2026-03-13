@@ -21,4 +21,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByContentContainingIgnoreCase(String keyword);
     List<Post> findByUserUserIdIn(List<Long> userIds);
     List<Post> findByUser_UserIdInOrderByCreatedAtDesc(List<Long> userIds);
+    long countByUser(User user);
 }

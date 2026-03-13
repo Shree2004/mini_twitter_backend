@@ -13,4 +13,11 @@ public class FeedPost {
     private UserDTO user;
     private int likeCount;
     private int commentCount;
+
+    public FeedPost(Long postId, String content, String imageUrl, LocalDateTime createdAt, String username, int size, int size1) {
+    }
+
+    public FeedPost() {
+
+    }
 }

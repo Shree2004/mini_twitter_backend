@@ -1,9 +1,11 @@
 package com.shree.mini_twitter_backend.security;
 
 import com.shree.mini_twitter_backend.service.CustomUserDetailsService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import lombok.RequiredArgsConstructor;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +28,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+        // ✅ Skip authentication for login/register
+        if (path.startsWith("/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -34,24 +44,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
-        String username = jwtService.extractUsername(token);
+        String username = null;
+
+        try {
+            username = jwtService.extractUsername(token);
+        } catch (ExpiredJwtException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
+            if (jwtService.isTokenValid(token, userDetails)) {
 
-            authToken.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
 
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
         }
 
         filterChain.doFilter(request, response);

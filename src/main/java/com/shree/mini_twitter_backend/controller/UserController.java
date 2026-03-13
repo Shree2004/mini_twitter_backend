@@ -1,5 +1,6 @@
 package com.shree.mini_twitter_backend.controller;
 
+import com.shree.mini_twitter_backend.dto.ProfileDTO;
 import com.shree.mini_twitter_backend.dto.UserDTO;
 import com.shree.mini_twitter_backend.entity.Follow;
 import com.shree.mini_twitter_backend.entity.User;
@@ -72,6 +73,13 @@ public class UserController {
         String username = authentication.getName();
 
         return userService.unFollowUser(username, usernameToUnfollow);
+    }
+
+    @GetMapping("/users/{username}/profile")
+    public ProfileDTO getProfile(@PathVariable String username) {
+
+        return userService.getProfile(username);
+
     }
 
 }

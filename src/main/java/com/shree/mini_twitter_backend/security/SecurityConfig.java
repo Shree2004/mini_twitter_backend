@@ -26,11 +26,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/**",
-                                "/**.html",
-                                "/**.css",
-                                "/**.js",
-                                "/static/**"
+                                "/error",
+                                "/favicon.ico",
+                                "/static/**",
+                                "/*.html",
+                                "/*.css",
+                                "/*.js"
                         ).permitAll()
+
                         .anyRequest().authenticated()
                 )
 
@@ -38,8 +41,10 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                .addFilterBefore(jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(
+                        jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                );
 
         return http.build();
     }
