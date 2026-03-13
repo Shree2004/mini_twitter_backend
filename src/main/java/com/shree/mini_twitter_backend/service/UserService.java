@@ -1,10 +1,12 @@
 package com.shree.mini_twitter_backend.service;
 
+import com.shree.mini_twitter_backend.dto.UserDTO;
 import com.shree.mini_twitter_backend.entity.*;
 import com.shree.mini_twitter_backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,15 +52,15 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public Follow followUser(String username, Long followingId){
+    public Follow followUser(String username, String usernameToFollow){
 
         User follower = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Follower not found"));
 
-        User following = userRepository.findById(followingId)
+        User following = userRepository.findByUsername(usernameToFollow)
                 .orElseThrow(() -> new RuntimeException("User to follow not found"));
 
-        if (follower.getUserId().equals(followingId)){
+        if (follower.getUserId().equals(following.getUserId())){
             throw new RuntimeException("User cannot follow themselves");
         }
 
@@ -73,15 +75,15 @@ public class UserService {
         return followRepository.save(follow);
     }
 
-    public Follow unFollowUser(String username, Long followingId) {
+    public Follow unFollowUser(String username, String usernameToUnfollow){
 
         User follower = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Follower not found"));
 
-        User following = userRepository.findById(followingId)
+        User following = userRepository.findByUsername(usernameToUnfollow)
                 .orElseThrow(() -> new RuntimeException("User to unfollow not found"));
 
-        if (follower.getUserId().equals(followingId)) {
+        if (follower.getUserId().equals(following.getUserId())){
             throw new RuntimeException("User cannot unfollow themselves");
         }
 
@@ -92,6 +94,18 @@ public class UserService {
         followRepository.delete(unfollow);
 
         return unfollow;
+    }
+
+    public List<UserDTO> searchUsers(String username) {
+
+        List<User> users = userRepository.findByUsernameContaining(username);
+
+        return users.stream()
+                .map(user -> new UserDTO(
+                        user.getUserId(),
+                        user.getUsername()
+                ))
+                .toList();
     }
 
 

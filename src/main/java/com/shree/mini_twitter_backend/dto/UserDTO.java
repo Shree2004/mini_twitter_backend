@@ -10,4 +10,11 @@ public class UserDTO {
         this.username = username;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
 }

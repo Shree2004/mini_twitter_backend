@@ -1,11 +1,14 @@
 package com.shree.mini_twitter_backend.controller;
 
+import com.shree.mini_twitter_backend.dto.UserDTO;
 import com.shree.mini_twitter_backend.entity.Follow;
 import com.shree.mini_twitter_backend.entity.User;
 import com.shree.mini_twitter_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -38,6 +41,11 @@ public class UserController {
 //        return userService.loginUser(user);
 //    }
 
+    @GetMapping("/users/search")
+    public List<UserDTO> searchUsers(@RequestParam String username){
+        return userService.searchUsers(username);
+    }
+
     @GetMapping("/me")
     public String me(Authentication authentication){
         return authentication.getName();
@@ -48,22 +56,22 @@ public class UserController {
         return userService.getUserById(Id).orElseThrow();
     }
 
-    @PostMapping("/users/{followingId}/follow")
-    public Follow followUser(@PathVariable Long followingId,
+    @PostMapping("/users/{usernameToFollow}/follow")
+    public Follow followUser(@PathVariable String usernameToFollow,
                              Authentication authentication){
 
         String username = authentication.getName();
 
-        return userService.followUser(username, followingId);
+        return userService.followUser(username, usernameToFollow);
     }
 
-    @PostMapping("/users/{followingId}/unfollow")
-    public Follow unFollowUser(@PathVariable Long followingId,
+    @PostMapping("/users/{usernameToUnfollow}/unfollow")
+    public Follow unFollowUser(@PathVariable String usernameToUnfollow,
                                Authentication authentication){
 
         String username = authentication.getName();
 
-        return userService.unFollowUser(username, followingId);
+        return userService.unFollowUser(username, usernameToUnfollow);
     }
 
 }

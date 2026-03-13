@@ -1,17 +1,17 @@
-const API="http://localhost:8080"
+const API = "http://localhost:8080";
 
 function getToken(){
-    return localStorage.getItem("token")
+    return localStorage.getItem("token");
 }
 
 function setToken(token){
-    localStorage.setItem("token",token)
+    localStorage.setItem("token",token);
 }
-//LOGIN -------------------------------------------------
+
 async function login(){
 
-const username=document.getElementById("username").value
-const password=document.getElementById("password").value
+const username=document.getElementById("username").value;
+const password=document.getElementById("password").value;
 
 const res=await fetch(API+"/auth/login",{
 method:"POST",
@@ -22,24 +22,22 @@ body:JSON.stringify({
 username,
 password
 })
-})
+});
 
-const data=await res.json()
+const data=await res.json();
 
-setToken(data.token)
+setToken(data.token);
 
-window.location="feed.html"
+window.location="feed.html";
 }
-
-//REGISTER -------------------------------------------------
 
 async function register(){
 
-const username=document.getElementById("username").value
-const email=document.getElementById("email").value
-const mobile=document.getElementById("mobile").value
-const bio=document.getElementById("bio").value
-const password=document.getElementById("password").value
+const username=document.getElementById("username").value;
+const email=document.getElementById("email").value;
+const mobile=document.getElementById("mobile").value;
+const bio=document.getElementById("bio").value;
+const password=document.getElementById("password").value;
 
 await fetch(API+"/auth/register",{
 method:"POST",
@@ -53,57 +51,63 @@ mobileNumber:mobile,
 bio,
 password
 })
-})
+});
 
-window.location="login.html"
+window.location="login.html";
 }
-
-//LOAD-FEED -------------------------------------------------
 
 async function loadFeed(){
 
-const res=await fetch(API+"/feed?page=0&size=10",{
+const res = await fetch(API + "/users/feed?page=0&size=10",{
 headers:{
-Authorization:"Bearer "+getToken()
+Authorization:"Bearer " + getToken()
 }
-})
+});
 
-const posts=await res.json()
+const posts = await res.json();
 
-const feed=document.getElementById("feed")
+const feed = document.getElementById("feed");
 
-feed.innerHTML+=`
+feed.innerHTML = "";
 
+posts.forEach(p => {
+
+const username = p.user && p.user.username ? p.user.username : "User";
+
+feed.innerHTML += `
 <div class="post">
 
-<h3>${p.user.username}</h3>
+<h3>${username}</h3>
 
 <p>${p.content}</p>
 
 <img src="${p.imageUrl || ""}" width="200">
 
-<p> ${p.likeCount}  ${p.commentCount}</p>
+<p>Likes: ${p.likeCount} | Comments: ${p.commentCount}</p>
 
 <button onclick="likePost(${p.postId})">Like</button>
 
+<br><br>
+
 <div>
 <input id="comment-${p.postId}" placeholder="Write comment">
-<button onclick="commentPost(${p.postId})">
-Comment
+<button onclick="commentPost(${p.postId})">Comment</button>
+</div>
+
+<br>
+
+<button onclick="toggleComments(${p.postId}, this)">
+View Comments
 </button>
+
+<div id="comments-${p.postId}" style="display:none; margin-top:10px;"></div>
+
 </div>
+`;
 
-<div id="comments-${p.postId}"></div>
-
-</div>
-
-`
-
-})
+});
 
 }
-
-//LIKE-POST -------------------------------------------------
 
 async function likePost(postId){
 
@@ -112,25 +116,21 @@ method:"POST",
 headers:{
 Authorization:"Bearer "+getToken()
 }
-})
+});
 
-loadFeed()
-
+loadFeed();
 }
-
-//CREATE-POST -------------------------------------------------
-
 async function createPost(){
 
-const content=document.getElementById("content").value
-const image=document.getElementById("image").files[0]
+const content=document.getElementById("content").value;
+const image=document.getElementById("image").files[0];
 
-const form=new FormData()
+const form=new FormData();
 
-form.append("content",content)
+form.append("content",content);
 
 if(image){
-form.append("image",image)
+form.append("image",image);
 }
 
 await fetch(API+"/posts",{
@@ -139,52 +139,143 @@ headers:{
 Authorization:"Bearer "+getToken()
 },
 body:form
-})
+});
 
-window.location="feed.html"
+window.location="feed.html";
+
 }
-
-//COMMENT-POST -------------------------------------------------
 
 async function commentPost(postId){
 
-const content=document.getElementById("comment-"+postId).value
+const content = document.getElementById("comment-" + postId).value;
 
-await fetch(API+"/posts/"+postId+"/comments",{
+await fetch(API + "/posts/" + postId + "/comments?content=" + encodeURIComponent(content),{
 method:"POST",
 headers:{
-"Content-Type":"application/json",
-Authorization:"Bearer "+getToken()
-},
-body:JSON.stringify({
-content
-})
-})
+Authorization:"Bearer " + getToken()
+}
+});
 
-loadFeed()
+loadFeed();
 
 }
-
-//LOAD-COMMENT-UNDER-POST -------------------------------------------------
 
 async function loadComments(postId){
 
-const res=await fetch(API+"/posts/"+postId+"/comments",{
+const res = await fetch(API + "/posts/" + postId + "/comments",{
 headers:{
-Authorization:"Bearer "+getToken()
+Authorization:"Bearer " + getToken()
 }
-})
+});
 
-const comments=await res.json()
+const comments = await res.json();
 
-const div=document.getElementById("comments-"+postId)
+const div = document.getElementById("comments-" + postId);
 
-comments.forEach(c=>{
+div.innerHTML="";
 
-div.innerHTML+=`
+comments.forEach(c => {
+
+div.innerHTML += `
 <p><b>${c.user.username}</b>: ${c.content}</p>
-`
+`;
 
-})
+});
 
 }
+
+async function toggleComments(postId){
+
+const div = document.getElementById("comments-" + postId);
+
+if(div.style.display === "none"){
+
+div.style.display = "block";
+
+await loadComments(postId);
+
+}else{
+
+div.style.display = "none";
+
+}
+
+}
+
+// SEARCH LOGIC
+
+async function searchUsers(){
+
+const query = document.getElementById("searchUser").value;
+
+const res = await fetch(API + "/users/search?username=" + query,{
+headers:{
+Authorization: "Bearer " + getToken()
+}
+});
+
+const users = await res.json();
+
+console.log("API RESPONSE:", users);   // 👈 ADD THIS
+
+const results = document.getElementById("userResults");
+
+results.innerHTML = "";
+
+users.forEach(u => {
+
+console.log("User object:", u);   // 👈 ADD THIS
+
+const name = u.username;
+
+results.innerHTML += `
+<div>
+
+<b>${name}</b>
+
+<button onclick="followUser('${name}')">Follow</button>
+<button onclick="unfollowUser('${name}')">Unfollow</button>
+
+</div>
+`;
+
+});
+
+}
+
+//FOLLOW
+
+async function followUser(username){
+
+const res = await fetch(API + "/users/" + username + "/follow",{
+method:"POST",
+headers:{
+Authorization:"Bearer " + getToken()
+}
+});
+
+if(res.ok){
+alert("Followed user");
+}else{
+const err = await res.text();
+alert("Follow failed: " + err);
+}
+
+}
+
+//UNFOLLOW
+
+async function unfollowUser(username){
+
+await fetch(API + "/users/" + username + "/unfollow",{
+method:"POST",
+headers:{
+Authorization:"Bearer " + getToken()
+}
+});
+
+alert("Unfollowed user");
+
+}
+
+
