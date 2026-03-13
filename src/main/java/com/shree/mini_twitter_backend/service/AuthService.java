@@ -3,7 +3,7 @@ package com.shree.mini_twitter_backend.service;
 import com.shree.mini_twitter_backend.dto.*;
 import com.shree.mini_twitter_backend.entity.User;
 import com.shree.mini_twitter_backend.enums.AccountStatus;
-import com.shree.mini_twitter_backend.enums.role;
+import com.shree.mini_twitter_backend.enums.Role;
 import com.shree.mini_twitter_backend.repository.UserRepository;
 import com.shree.mini_twitter_backend.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setBio(request.getBio());
         user.setMobileNumber(request.getMobileNumber());
-        user.setRole(role.USER);
+        user.setRole(Role.USER);
         user.setAccountStatus(AccountStatus.valueOf("ACTIVE"));
 
         userRepository.save(user);
@@ -40,7 +40,11 @@ public class AuthService {
 
         User user = userRepository
                 .findByUsername(request.getUsername())
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if(user.getAccountStatus() == AccountStatus.BANNED){
+            throw new RuntimeException("User is banned by admin");
+        }
 
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword())){
             throw new RuntimeException("Invalid password");

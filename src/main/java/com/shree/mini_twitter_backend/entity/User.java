@@ -3,7 +3,7 @@ package com.shree.mini_twitter_backend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.shree.mini_twitter_backend.enums.AccountStatus;
-import com.shree.mini_twitter_backend.enums.role;
+import com.shree.mini_twitter_backend.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,10 +38,12 @@ public class User {
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
-    private role role;
+    @Column(nullable = false)
+    private Role role = Role.USER;
 
     @Enumerated(EnumType.STRING)
-    private AccountStatus accountStatus;
+    @Column(nullable = false)
+    private AccountStatus accountStatus = AccountStatus.ACTIVE;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

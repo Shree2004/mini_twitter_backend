@@ -1,17 +1,11 @@
 package com.shree.mini_twitter_backend.controller;
 
-import com.shree.mini_twitter_backend.dto.LoginRequest;
-import com.shree.mini_twitter_backend.dto.RegisterUserRequest;
 import com.shree.mini_twitter_backend.entity.Follow;
 import com.shree.mini_twitter_backend.entity.User;
-import com.shree.mini_twitter_backend.enums.AccountStatus;
-import com.shree.mini_twitter_backend.enums.role;
 import com.shree.mini_twitter_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 
 @RestController
@@ -43,6 +37,11 @@ public class UserController {
 //
 //        return userService.loginUser(user);
 //    }
+
+    @GetMapping("/me")
+    public String me(Authentication authentication){
+        return authentication.getName();
+    }
 
     @GetMapping("/users/{Id}")
     public User getUserById(@PathVariable Long Id){
