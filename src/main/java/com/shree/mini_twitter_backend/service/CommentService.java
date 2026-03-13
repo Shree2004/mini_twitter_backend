@@ -22,13 +22,13 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public Comment createComment(Long userId, Long postId, String content){
+    public Comment createComment(String username, Long postId, String content){
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User Not Found"));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User Not Found"));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(()-> new RuntimeException("Post not Found"));
+                .orElseThrow(() -> new RuntimeException("Post not Found"));
 
         Comment comment = new Comment();
         comment.setContent(content);
@@ -45,26 +45,26 @@ public class CommentService {
         return commentRepository.findByPostPostId(postId);
     }
 
-    public void deleteComment(Long userId, Long postId, Long commentId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User Not Found"));
+    public void deleteComment(String username, Long postId, Long commentId){
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(()-> new RuntimeException("Post not Found"));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User Not Found"));
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(()->new RuntimeException("Comment not found"));
-
-        if (!comment.getUser().getUserId().equals(userId)) {
-            throw new RuntimeException("You cannot delete someone else's comment");
-        }
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
 
         if (!comment.getPost().getPostId().equals(postId)) {
             throw new RuntimeException("Comment does not belong to this post");
         }
 
-        commentRepository.delete(comment);
+        boolean isOwner = comment.getUser().getUserId().equals(user.getUserId());
+        boolean isAdmin = user.getRole().name().equals("ADMIN");
 
+        if (!isOwner && !isAdmin) {
+            throw new RuntimeException("You cannot delete this comment");
+        }
+
+        commentRepository.delete(comment);
     }
 
 }

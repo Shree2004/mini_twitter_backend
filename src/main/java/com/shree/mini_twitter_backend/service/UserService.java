@@ -50,15 +50,15 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public Follow followUser(Long followerId, Long followingId){
+    public Follow followUser(String username, Long followingId){
 
-        User follower = userRepository.findById(followerId)
+        User follower = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Follower not found"));
 
         User following = userRepository.findById(followingId)
                 .orElseThrow(() -> new RuntimeException("User to follow not found"));
 
-        if (followerId.equals(followingId)){
+        if (follower.getUserId().equals(followingId)){
             throw new RuntimeException("User cannot follow themselves");
         }
 
@@ -67,34 +67,30 @@ public class UserService {
         }
 
         Follow follow = new Follow();
-        follow.setFollowing(following);
         follow.setFollower(follower);
+        follow.setFollowing(following);
+
         return followRepository.save(follow);
-
-
     }
 
-    public Follow unFollowUser(Long followerId, Long followingId) {
+    public Follow unFollowUser(String username, Long followingId) {
 
-        User follower = userRepository.findById(followerId)
+        User follower = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Follower not found"));
 
         User following = userRepository.findById(followingId)
-                .orElseThrow(() -> new RuntimeException("User to follow not found"));
+                .orElseThrow(() -> new RuntimeException("User to unfollow not found"));
 
-        if (followerId.equals(followingId)) {
+        if (follower.getUserId().equals(followingId)) {
             throw new RuntimeException("User cannot unfollow themselves");
         }
 
-        if (!followRepository.existsByFollowerAndFollowing(follower, following)) {
-            throw new RuntimeException("Already unfollowed");
-        }
-
         Follow unfollow = followRepository
-                .findByFollowerAndFollowing(follower, following).
-                orElseThrow(() -> new RuntimeException("Follow relation not found"));
+                .findByFollowerAndFollowing(follower, following)
+                .orElseThrow(() -> new RuntimeException("Follow relation not found"));
 
         followRepository.delete(unfollow);
+
         return unfollow;
     }
 

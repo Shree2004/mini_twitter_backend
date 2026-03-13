@@ -22,15 +22,16 @@ public class LikeService {
     private PostRepository postRepository;
 
 
-    public Like likePost(Long userId, Long postId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User Not Found"));
+    public Like likePost(String username, Long postId){
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(()-> new RuntimeException("Post not Found"));
+                .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        if (likeRepository.existsByUserAndPost(user,post)){
-            throw new RuntimeException("You Already liked this post");
+        if (likeRepository.existsByUserAndPost(user, post)) {
+            throw new RuntimeException("You already liked this post");
         }
 
         Like like = new Like();
@@ -40,18 +41,18 @@ public class LikeService {
         return likeRepository.save(like);
     }
 
-    public void unLikePost(Long userId, Long postId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User Not Found"));
+    public void unLikePost(String username, Long postId){
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(()-> new RuntimeException("Post not Found"));
+                .orElseThrow(() -> new RuntimeException("Post not found"));
 
         Like like = likeRepository.findByUserAndPost(user, post)
                 .orElseThrow(() -> new RuntimeException("Like not found"));
 
         likeRepository.delete(like);
-
     }
 
     public Long getLikesCount(Long postId){

@@ -1,7 +1,6 @@
 package com.shree.mini_twitter_backend.service;
 
 import com.shree.mini_twitter_backend.dto.FeedPost;
-import com.shree.mini_twitter_backend.dto.LoginRequest;
 import com.shree.mini_twitter_backend.dto.UserDTO;
 import com.shree.mini_twitter_backend.entity.Follow;
 import com.shree.mini_twitter_backend.entity.Post;
@@ -10,8 +9,10 @@ import com.shree.mini_twitter_backend.repository.FollowRepository;
 import com.shree.mini_twitter_backend.repository.PostRepository;
 import com.shree.mini_twitter_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -24,9 +25,9 @@ public class FeedService {
     @Autowired
     private FollowRepository followRepository;
 
-    public List<FeedPost> feedGeneration(Long userId) {
+    public List<FeedPost> feedGeneration(String username, int page, int size) {
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 
         List<Follow> follow = followRepository.findByFollower(user);
@@ -37,10 +38,14 @@ public class FeedService {
                         .toList()
         );
 
-        followedUserIds.add(userId);
+        followedUserIds.add(user.getUserId());
 
-        List<Post> posts = postRepository
-                .findByUser_UserIdInOrderByCreatedAtDesc(followedUserIds);
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Post> postPage = postRepository
+                .findByUser_UserIdInOrderByCreatedAtDesc(followedUserIds, pageable);
+
+        List<Post> posts = postPage.getContent();
 
         return posts.stream().map(post -> {
 

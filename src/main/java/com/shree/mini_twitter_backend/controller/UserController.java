@@ -48,14 +48,22 @@ public class UserController {
         return userService.getUserById(Id).orElseThrow();
     }
 
-    @PostMapping("/users/{followerId}/follow/{followingId}")
-    public Follow followUser(@PathVariable Long followerId, @PathVariable Long followingId){
-        return userService.followUser(followerId, followingId);
+    @PostMapping("/users/{followingId}/follow")
+    public Follow followUser(@PathVariable Long followingId,
+                             Authentication authentication){
+
+        String username = authentication.getName();
+
+        return userService.followUser(username, followingId);
     }
 
-    @PostMapping("/users/{followerId}/unfollow/{followingId}")
-    public Follow unFollowUser(@PathVariable Long followerId,@PathVariable Long followingId){
-        return userService.unFollowUser(followerId, followingId);
+    @PostMapping("/users/{followingId}/unfollow")
+    public Follow unFollowUser(@PathVariable Long followingId,
+                               Authentication authentication){
+
+        String username = authentication.getName();
+
+        return userService.unFollowUser(username, followingId);
     }
 
 }
