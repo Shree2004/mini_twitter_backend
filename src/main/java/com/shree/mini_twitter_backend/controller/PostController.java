@@ -3,6 +3,7 @@ package com.shree.mini_twitter_backend.controller;
 import com.shree.mini_twitter_backend.entity.Post;
 import com.shree.mini_twitter_backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,11 +16,14 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("/users/{userId}/posts")
-    public Post createPost(@PathVariable Long userId,
-                           @RequestParam String content,
-                           @RequestParam (required = false) MultipartFile image) throws IOException {
-        return postService.createPost(userId,content,image);
+    @PostMapping("/posts")
+    public Post createPost(@RequestParam String content,
+                           @RequestParam(required = false) MultipartFile image,
+                           Authentication authentication) throws IOException {
+
+        String username = authentication.getName();
+
+        return postService.createPost(username, content, image);
     }
 
     @GetMapping("/posts/{postId}")
@@ -32,8 +36,14 @@ public class PostController {
         return postService.getPostsByUserId(userId);
     }
 
-    @DeleteMapping("/users/{userId}/posts/{postId}")
-    public void deletePost(@PathVariable Long userId, @PathVariable Long postId){
-        postService.deletePost(userId, postId);
+    @DeleteMapping("/posts/{postId}")
+    public String deletePost(@PathVariable Long postId,
+                             Authentication authentication){
+
+        String username = authentication.getName();
+
+        postService.deletePost(username, postId);
+
+        return "Post deleted successfully";
     }
 }

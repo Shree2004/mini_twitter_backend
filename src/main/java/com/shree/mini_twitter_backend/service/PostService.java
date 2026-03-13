@@ -22,10 +22,10 @@ public class PostService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
-    public Post createPost(Long userId, String content, MultipartFile image) throws IOException {
+    public Post createPost(String username, String content, MultipartFile image) throws IOException {
 
-        User user = userRepository.findById(userId).
-                orElseThrow(() -> new RuntimeException("user not found"));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         String imageUrl = null;
 
@@ -53,14 +53,21 @@ public class PostService {
         return postRepository.findByUser(user);
     }
 
-    public void deletePost(Long userId, Long postId) {
-        User user = userRepository.findById(userId).
-                orElseThrow(() -> new RuntimeException("user not found"));
-        Post delete = getPostById(postId);
-        if (!delete.getUser().getUserId().equals(userId)) {
-            throw new RuntimeException("You cannot delete someone else's post");
+    public void deletePost(String username, Long postId) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Post post = getPostById(postId);
+
+        boolean isOwner = post.getUser().getUserId().equals(user.getUserId());
+        boolean isAdmin = user.getRole().name().equals("ADMIN");
+
+        if (!isOwner && !isAdmin) {
+            throw new RuntimeException("You cannot delete this post");
         }
-        postRepository.delete(delete);
+
+        postRepository.delete(post);
     }
 
 
