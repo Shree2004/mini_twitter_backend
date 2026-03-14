@@ -1,4 +1,4 @@
-const API = "https://minitwitterbackend-production.up.railway.app";
+const API = "https://minitwitterbackend-production-9450.up.railway.app";
 
 /* =========================
 TOKEN STORAGE
